@@ -1,0 +1,99 @@
+﻿@model PagedList.IPagedList<University.Entities.Assignment>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Assignment Info";
+}
+
+@{
+    SelectListItem p1 = new SelectListItem() { Text = "5", Value = "5" };
+    SelectListItem p2 = new SelectListItem() { Text = "7", Value = "7" };
+    SelectListItem p3 = new SelectListItem() { Text = "9", Value = "9" };
+    SelectListItem p4 = new SelectListItem() { Text = "15", Value = "15" };
+    SelectListItem p5 = new SelectListItem() { Text = "25", Value = "25" };
+    List<SelectListItem> pages = new List<SelectListItem>() { p1, p2, p3, p4, p5 };
+}
+
+<h2>Assignments</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-outline-primary" })
+
+    <a class="btn text-primary" href="/StudentAssignmentMarks/Create">Create Mark</a>
+    <a class="btn text-primary" href="/StudentAssignmentMarks/Index">All Marks</a>
+
+</p>
+
+
+@using (Html.BeginForm("AssignmentInfo", "Assignments", FormMethod.Get))
+{
+    string str = ViewBag.CurrentSortOrder;
+    <div class="form-row">
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.TextBox("searchTitle", null, new { @class = "form-control", placeholder = "Search First Name" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.TextBox("searchDescription", null, new { @class = "form-control", placeholder = "Search Last Name" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.TextBox("searchMinSubDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.TextBox("searchMaxSubDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.DropDownList("pSize", pages, new { @class = "form-control" })
+        </div>
+        @Html.TextBox("sortOrder", str, new { type = "hidden" })
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            <p><input type="submit" name="" value="Search" class="btn btn-primary ml-2" /></p>
+        </div>
+    </div>
+}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-primary">Image</th>
+            <th>@Html.ActionLink("Title", "AssignmentInfo", "Assignments", new { sortOrder = ViewBag.TitleSortParam, searchTitle = ViewBag.CurrentTitle, searchDescription = ViewBag.CurrentDesciption, searchMinSubDate = ViewBag.CurrentMinSDate, searchMaxSubDate = ViewBag.CurrentMaxSDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.TView })</th>
+            <th>@Html.ActionLink("Description", "AssignmentInfo", "Assignments", new { sortOrder = ViewBag.DescriptionSortParam, searchTitle = ViewBag.CurrentTitle, searchDescription = ViewBag.CurrentDesciption, searchMinSubDate = ViewBag.CurrentMinSDate, searchMaxSubDate = ViewBag.CurrentMaxSDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.DView })</th>
+            <th>@Html.ActionLink("Sub Date", "AssignmentInfo", "Assignments", new { sortOrder = ViewBag.SubDateSortParam, searchTitle = ViewBag.CurrentTitle, searchDescription = ViewBag.CurrentDesciption, searchMinSubDate = ViewBag.CurrentMinSDate, searchMaxSubDate = ViewBag.CurrentMaxSDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.SDView })</th>
+            <th class="text-primary">Course</th>
+            <th class="text-primary">Modify</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var assignment in Model)
+        {
+            <tr>
+                <td><a><img width="100" class="img-fluid" src="@assignment.PhotoUrl" alt="Leipei i eikona" /></a></td>
+                <td>@Html.DisplayFor(x => assignment.Title)</td>
+                <td>@assignment.Description</td>
+                <td>@(assignment.SubDate?.ToString("dd-MM-yyyy"))</td>
+                <td>@assignment.Course.Title</td>
+                <td>
+
+                    @Html.ActionLink("Edit", "Edit", new { id = assignment.AssignmentId }, new { @class = "btn btn-primary" })<br />
+                    @Html.ActionLink("Details", "Details", new { id = assignment.AssignmentId }, new { @class = "btn btn-outline-primary" })<br />
+                    @Html.ActionLink("Delete", "Delete", new { id = assignment.AssignmentId }, new { @class = "btn btn-primary" })<br />
+
+                </td>
+            </tr>
+        }
+
+
+
+    </tbody>
+
+</table>
+
+<p></p>
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                        @Html.PagedListPager(Model, x => @Url.Action("AssignmentInfo", "Assignments", new { page = x, sortOrder = ViewBag.FNameSortParam, searchTitle = ViewBag.CurrentTitle, searchDescription = ViewBag.CurrentDesciption, searchMinSubDate = ViewBag.CurrentMinSDate, searchMaxSubDate = ViewBag.CurrentMaxSDate, pSize = ViewBag.CurrentpSize }))

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<University.Entities.StudentAssignmentMark>
+
+@{
+    ViewBag.Title = "All Marks";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table table-striped table-bordered">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Assignment.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Student.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OralMark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalMark)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Assignment.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Student.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OralMark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalMark)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { aid = item.AssignmentId, sid = item.StudentId },new {@class="btn btn-primary" })
+            @Html.ActionLink("Details", "Details", new { aid = item.AssignmentId, sid = item.StudentId }, new { @class = "btn btn-primary"  }) 
+            @Html.ActionLink("Delete", "Delete", new { aid = item.AssignmentId, sid = item.StudentId }, new { @class = "btn btn-primary"  })
+        </td>
+    </tr>
+}
+
+</table>

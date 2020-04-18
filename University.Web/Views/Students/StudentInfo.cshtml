@@ -1,0 +1,104 @@
+﻿@model PagedList.IPagedList<University.Entities.Student>
+@using PagedList;
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Student Info";
+}
+
+@{
+    SelectListItem a1 = new SelectListItem() { Text = "5", Value = "5" };
+    SelectListItem a2 = new SelectListItem() { Text = "10", Value = "10" };
+    SelectListItem a3 = new SelectListItem() { Text = "15", Value = "15" };
+    SelectListItem a4 = new SelectListItem() { Text = "20", Value = "20" };
+    SelectListItem a5 = new SelectListItem() { Text = "25", Value = "25" };
+    List<SelectListItem> pages = new List<SelectListItem>() { a1, a2, a3, a4, a5 };
+}
+
+<h2>Students</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-outline-primary" })
+</p>
+
+@using (Html.BeginForm("StudentInfo", "Students", FormMethod.Get))
+{
+    string str = ViewBag.CurrentSortOrder;
+    <div class="form-row">
+        <div class="form-group mb-2">
+            @Html.Label("First Name", new { @for = "searchFirstName" })
+            @Html.TextBox("searchFirstName", null, new { @class = "form-control", placeholder = "Search First Name" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Last Name", new { @for = "searchLastName" })
+            @Html.TextBox("searchLastName", null, new { @class = "form-control", placeholder = "Search Last Name" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Min Birth Date", new { @for = "searchMinBirthDate" })
+            @Html.TextBox("searchMinBirthDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Max Birth Date", new { @for = "searchMaxBirthDate" })
+            @Html.TextBox("searchMaxBirthDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Item/Pages", new { @for = "pSize" })
+            @Html.DropDownList("pSize", pages, new { @class = "form-control" })
+        </div>
+        @Html.TextBox("sortOrder", str, new { type = "hidden" })
+        <div class="form-group mb-2">
+            <label class="ml-2">&nbsp;</label>
+            <p><input type="submit" name="" value="Search" class="btn btn-primary ml-2" /></p>
+        </div>
+    </div>
+}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-primary">Image</th>
+            <th>@Html.ActionLink("First Name", "StudentInfo", "Students", new { sortOrder = ViewBag.FNameSortParam, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinBirthDate = ViewBag.CurrentMinBDate, searchMaxBirthDate = ViewBag.CurrentMaxBDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.FView })</th>
+            <th>@Html.ActionLink("Last Name", "StudentInfo", "Students", new { sortOrder = ViewBag.LNameSortParam, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinBirthDate = ViewBag.CurrentMinBDate, searchMaxBirthDate = ViewBag.CurrentMaxBDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.LView })</th>
+            <th>@Html.ActionLink("Birth Date", "StudentInfo", "Students", new { sortOrder = ViewBag.BirthDateSortParam, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinBirthDate = ViewBag.CurrentMinBDate, searchMaxBirthDate = ViewBag.CurrentMaxBDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.BDView })</th>
+            <th class="text-primary">Course & Assignments</th>
+            <th class="text-primary">Modify</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td><a><img width="100" class="img-fluid" src="@student.PhotoUrl" alt="Student Image" /></a></td>
+                <td>@Html.DisplayFor(x => student.FirstName)</td>
+                <td>@student.LastName</td>
+                <td>@student.DateOfBirth.ToString("dd-MM-yyyy")</td>
+                <td>
+                    @foreach (var course in student.Courses)
+                    {
+                        @course.Title
+                        <ul>
+                            @foreach (var a in course.Assignments)
+                            {
+
+                                <li>@a.Title</li>
+                            }
+                        </ul>
+                    }
+                </td>
+                <td>
+                    
+                    @Html.ActionLink("Edit", "Edit", new { id = student.StudentId }, new { @class = "btn btn-primary" })<br />
+                    @Html.ActionLink("Details", "Details", new { id = student.StudentId }, new { @class = "btn btn-outline-primary" })<br />
+                    @Html.ActionLink("Delete", "Delete", new { id = student.StudentId }, new { @class = "btn btn-primary" })<br />
+                    
+                </td>
+            </tr>
+        }
+
+
+
+    </tbody>
+
+</table>
+<p></p>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, x => @Url.Action("StudentInfo", "Students", new { page = x, sortOrder = ViewBag.CurrentSortOrder, searchFirstName = ViewBag.CurrentFirstName, searchLastName = ViewBag.CurrentLastName, searchMinBirthDate = ViewBag.CurrentMinBDate, searchMaxBirthDate = ViewBag.CurrentMaxBDate, pSize = ViewBag.CurrentpSize }))

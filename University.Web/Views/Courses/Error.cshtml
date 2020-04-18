@@ -1,0 +1,11 @@
+﻿@model University.Entities.Course
+
+@{
+    ViewBag.Title = "Error";
+}
+
+    <h2 class="text-danger">It cannot be deleted because there are Assignments involved. <br>Please delete the assignments first and try again. </h2>
+
+
+@Html.ActionLink("Back to List", "CourseInfo")
+

@@ -1,0 +1,249 @@
+﻿@model University.Web.Models.StatsViewModel
+@using University.Entities;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Stats</h2>
+
+@*===================Student Count====================*@
+<hr />
+<b>Students Count :</b> @Model.StudentsCount
+@*===================Assignment Count====================*@
+<hr />
+<b>Assignments Count :</b> @Model.AssignmentsCount
+@*===================Trainer Count====================*@
+<hr />
+<b>Traines Count :</b> @Model.TrainersCount
+@*===================Course Count====================*@
+<hr />
+<b>Courses Count :</b> @Model.CoursesCount
+<hr />
+
+@*===================Student Per Course Count====================*@
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <b>Student Per Course :</b>
+            <table class="table table-active d-table-cell">
+                <tr>
+                    <th>Course</th>
+                    <th>Students</th>
+                </tr>
+                @foreach (var item in Model.StudentsPerCourse)
+                {
+                    <tr>
+                        <td>
+                            @item.Key.Title
+                        </td>
+                        <td>
+                            @item.Count()
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        @*===================Trainer Per Course Count====================*@
+
+        <div class="col-4">
+            <b>Trainers Per Course :</b>
+            <table class="table table-active d-table-cell">
+                <tr>
+                    <th>Course</th>
+                    <th>Trainers</th>
+                </tr>
+                @foreach (var item in Model.TrainersPerCourse)
+                {
+                    <tr>
+                        <td>
+                            @item.Key.Title
+                        </td>
+                        <td>
+                            @item.Count()
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        @*===================Assignment Per Course Count====================*@
+
+        <div class="col-4">
+            <b>Assignments Per Course :</b>
+            <table class="table table-active d-table-cell">
+                <tr>
+                    <th>Course</th>
+                    <th>Assignments</th>
+                </tr>
+                @foreach (var item in Model.AssignmentPerCourse)
+                {
+                    <tr>
+                        <td>
+                            @item.Key.Title
+                        </td>
+                        <td>
+                            @item.Count()
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+@*===================Student Per Course Mark====================*@
+
+
+@{
+    double avg = 0;
+    double sum = 0;
+}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-4">
+            <b>Student Per Course Mark:</b>
+            <table class="table table-active d-table-cell">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Students/Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.Courses)
+                    {
+
+                        <tr>
+                            <th>
+                                @course.Title
+                            </th>
+                            <td>
+                                <ul>
+                                    @foreach (var student in course.Students)
+                                    {
+                                        <li>
+                                            @student.LastName
+                                        </li>
+                                        foreach (var assignment in course.Assignments)
+                                        {
+
+                                            foreach (var mark in assignment.StudentAssignmentMarks)
+                                            {
+                                                if (student.StudentId == mark.StudentId)
+                                                {
+                                                    sum = (mark.OralMark + mark.TotalMark) / 2;
+                                                }
+                                            }
+                                            avg += sum / course.Assignments.Count();
+                                        }
+                                        <ul>
+                                            <li>
+                                                @avg.ToString("0.00")
+                                            </li>
+                                        </ul>
+                                        avg = 0;
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                <tbody>
+            </table>
+        </div>
+
+        <div class="col-4">
+            <b>Student Per Course Per Assignment Mark:</b>
+            <table class="table table-active d-table-cell">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Assignment/Students/Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.Courses)
+                    {
+                        avg = 0;
+                        sum = 0;
+                        <tr>
+                            <th>
+                                @course.Title
+                            </th>
+                            <td>
+                                <ul>
+                                    @foreach (var assignment in course.Assignments)
+                                    {
+                                        <li>
+                                            @assignment.Title
+                                        </li>
+
+
+                                        foreach (var student in course.Students)
+                                        {
+                                            <ul>
+                                                <li>
+                                                    @student.LastName
+                                                </li>
+
+                                                @foreach (var mark in assignment.StudentAssignmentMarks)
+                                                {
+                                                    if (student.StudentId == mark.StudentId)
+                                                    {
+                                                        sum = (mark.OralMark + mark.TotalMark) / 2;
+                                                    }
+
+
+                                                }
+                                                <ol>
+                                                    <li>
+                                                        @sum
+                                                    </li>
+                                                </ol>
+                                            </ul>
+                                        }
+
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-4">
+            <b>Student Per Assignment Mark:</b>
+            <table class="table table-active d-table-cell">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Students/Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var assignments in Model.Assignments)
+                    {
+                        <tr>
+                            <th>
+                                @assignments.Title
+                            </th>
+                            <td>
+
+                                <ul>
+                                    @foreach (var mark in assignments.StudentAssignmentMarks)
+                                    {
+
+                                        <li> @mark.Student.LastName</li>
+                                        <ol>
+                                            <li> @((mark.OralMark + mark.TotalMark) / 2)</li>
+                                        </ol>
+
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

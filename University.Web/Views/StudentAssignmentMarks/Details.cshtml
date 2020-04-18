@@ -1,0 +1,51 @@
+﻿@model University.Entities.StudentAssignmentMark
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>StudentAssignmentMark</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Assignment.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Assignment.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OralMark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OralMark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalMark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalMark)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new {  aid = Model.AssignmentId, sid = Model.StudentId  }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

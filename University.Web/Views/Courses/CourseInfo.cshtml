@@ -1,0 +1,138 @@
+﻿@model PagedList.IPagedList<University.Entities.Course>
+@using PagedList;
+@using PagedList.Mvc;
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Course Info";
+}
+
+@{
+    SelectListItem p1 = new SelectListItem() { Text = "3", Value = "3" };
+    SelectListItem p2 = new SelectListItem() { Text = "5", Value = "5" };
+    SelectListItem p3 = new SelectListItem() { Text = "9", Value = "9" };
+    SelectListItem p4 = new SelectListItem() { Text = "15", Value = "15" };
+    SelectListItem p5 = new SelectListItem() { Text = "25", Value = "25" };
+    List<SelectListItem> pages = new List<SelectListItem>() { p1, p2, p3, p4, p5 };
+}
+
+
+<h2>Courses</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-outline-primary" })
+</p>
+
+
+@using (Html.BeginForm("CourseInfo", "Courses", FormMethod.Get))
+{
+    string str = ViewBag.CurrentSortOrder;
+    <div class="form-row">
+        <div class="form-group mb-2">
+            @Html.Label("Title", new { @for = "searchTitle" })
+            @Html.TextBox("searchTitle", null, new { @class = "form-control", placeholder = "Search Title" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Steam", new { @for = "searchStream" })
+            @Html.TextBox("searchStream", null, new { @class = "form-control", placeholder = "Search Stream" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Type", new { @for = "searchType" })
+            @Html.TextBox("searchType", null, new { @class = "form-control", placeholder = "Search Type" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Min Fees", new { @for = "searchMinFees" })
+            @Html.TextBox("searchMinFees", null, new { @class = "form-control", placeholder = "Search Min Fees" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Max Fees", new { @for = "searchMaxFees" })
+            @Html.TextBox("searchMaxFees", null, new { @class = "form-control", placeholder = "Search Max Fees" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Start Before", new { @for = "searchStartDate" })
+            @Html.TextBox("searchStartDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("End Before", new { @for = "searchEndDate" })
+            @Html.TextBox("searchEndDate", null, new { @class = "form-control", type = "date" })
+        </div>
+        <div class="form-group mb-2">
+            @Html.Label("Item/Pages", new {  @for = "pSize" })
+            @Html.DropDownList("pSize", pages, new { @class = "form-control" })
+        </div>
+        @Html.TextBox("sortOrder", str, new { type = "hidden" })
+        <div class="form-group mb-2">
+            <label class="ml-2">&nbsp;</label>
+            <p><input type="submit" name="" value="Search" class="btn btn-primary ml-2" /></p>
+        </div>
+    </div>
+}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="text-primary">Image</th>
+            <th>@Html.ActionLink("Title", "CourseInfo", "Courses", new { sortOrder = ViewBag.TitleSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.TView })</th>
+            <th>@Html.ActionLink("Stream", "CourseInfo", "Courses", new { sortOrder = ViewBag.StreamSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.STRView })</th>
+            <th>@Html.ActionLink("Type", "CourseInfo", "Courses", new { sortOrder = ViewBag.TypeSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.TYView })</th>
+            <th>@Html.ActionLink("Fees", "CourseInfo", "Courses", new { sortOrder = ViewBag.FeesSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.FView })</th>
+            <th>@Html.ActionLink("Start Date", "CourseInfo", "Courses", new { sortOrder = ViewBag.StartDateSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.SDView })</th>
+            <th>@Html.ActionLink("End Date", "CourseInfo", "Courses", new { sortOrder = ViewBag.EndDateSortParam, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }, new { @class = ViewBag.EDView })</th>
+            <th class="text-primary">Assignments</th>
+            <th class="text-primary">Trainers</th>
+            <th class="text-primary">Students</th>
+            <th class="text-primary">Modify</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+        <tr>
+            <td><a><img width="100" class="img-fluid" src="@course.PhotoUrl" alt="Course Image" /></a></td>
+            <td>@Html.DisplayFor(x => course.Title)</td>
+            <td>@course.Stream</td>
+            <td>@course.CourseType</td>
+            <td>@course.Fees</td>
+            <td>@(course.StartDate?.ToString("dd-MM-yyyy"))</td>
+            <td>@(course.EndDate?.ToString("dd-MM-yyyy"))</td>
+            <td>
+                <ul>
+                    @foreach (var assignment in course.Assignments)
+                    {
+                        <li>@assignment.Title</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    @foreach (var trainers in course.Trainers)
+                    {
+                        <li>@trainers.LastName</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    @foreach (var students in course.Students)
+                    {
+                        <li>@students.LastName</li>
+                    }
+                </ul>
+            </td>
+            <td>
+                
+                @Html.ActionLink("Edit", "Edit", new { id = course.CourseID }, new { @class = "btn btn-primary" }) <br />
+                @Html.ActionLink("Details", "Details", new { id = course.CourseID }, new { @class = "btn btn-outline-primary" }) <br />
+                @Html.ActionLink("Delete", "Delete", new { id = course.CourseID }, new { @class = "btn btn-primary" })<br />
+                
+            </td>
+        </tr>
+        }
+
+
+
+    </tbody>
+
+</table>
+<p></p>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, x => @Url.Action("CourseInfo", "Courses", new { page = x, sortOrder = ViewBag.CurrentSortOrder, searchTitle = ViewBag.CurrentTitle, searchStream = ViewBag.CurrentStream, searchType = ViewBag.CurrentType, searchMinFees = ViewBag.CurrentMinFees, searchMaxFees = ViewBag.CurrentMaxFees, searchStartDate = ViewBag.CurrentStartDate, searchEndDate = ViewBag.CurrentEndDate, pSize = ViewBag.CurrentpSize }))
